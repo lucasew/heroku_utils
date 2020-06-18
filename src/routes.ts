@@ -22,8 +22,8 @@ router.get("/render/:page", async (request, response) => {
     let page = await browser.newPage()
     let frame = await page.goto(request.params.page)
     await Promise.all([
-        page.waitForNavigation({waitUntil: 'domcontentloaded'}),
-        page.waitForNavigation({waitUntil: 'networkidle0'})
+        page.waitForNavigation({waitUntil: 'domcontentloaded'})//,
+        // page.waitForNavigation({waitUntil: 'networkidle0'})
     ])
     if (frame === undefined || frame === null) {
         throw {
