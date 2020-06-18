@@ -42,5 +42,5 @@ router.get("/render/:page", async (request, response) => {
 
 timer(console.log)
 
-
+app.use(router)
 app.listen(config.HTTP_PORT)
