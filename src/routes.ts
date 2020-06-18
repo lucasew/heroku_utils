@@ -23,7 +23,18 @@ router.get("/render/:page", async (request, response) => {
     let frame = await page.goto(request.params.page, {
         waitUntil: "networkidle2"
     })
-    response.status(frame?.status() as number).send(await frame?.buffer())
+    if (frame === undefined || frame === null) {
+        throw {
+            message: "frame is undefined",
+            status: 500
+        }
+    }
+    const contentType = response.getHeader('Content-Type')
+    if (contentType !== undefined) {
+        response.setHeader('Content-Type', contentType)
+    }
+    response
+        .status(frame.status() as number).send(await frame.buffer())
     await Promise.all([page.close(), browser.close()])
 })
 
