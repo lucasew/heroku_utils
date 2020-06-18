@@ -4,7 +4,9 @@ import puppeteer from 'puppeteer'
 import {newExpressEventSource} from './components/eventSources/express'
 import {newTaskPool} from './components/taskPool'
 
-const router = Router()
+const router = Router({
+    caseSensitive: false
+})
 const taskPool = newTaskPool(2)
 
 
@@ -27,7 +29,7 @@ router.get("/render/:page", async (request, response) => {
         headless: true,
         args: ['--no-sandbox']
     })
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
         page.close().then(browser.close)
         throw {
             message: "timeout",
@@ -36,9 +38,10 @@ router.get("/render/:page", async (request, response) => {
     }, 30000)
     let page = await browser.newPage()
     let frame = await page.goto(request.params.page, {
-        waitUntil: 'networkidle0'
+        waitUntil: 'domcontentloaded'
     })
     if (frame === undefined || frame === null) {
+        clearTimeout(timeout)
         throw {
             message: "frame is undefined",
             status: 500
@@ -51,6 +54,7 @@ router.get("/render/:page", async (request, response) => {
     const html = await page.$eval('html', (e) => e.innerHTML)
     response
         .status(frame.status() as number).send(html)
+    clearTimeout(timeout)
 })
 
 export default router
