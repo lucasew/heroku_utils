@@ -20,9 +20,11 @@ router.get("/render/:page", async (request, response) => {
         args: ['--no-sandbox']
     })
     let page = await browser.newPage()
-    let frame = await page.goto(request.params.page, {
-        waitUntil: "networkidle2"
-    })
+    let frame = await page.goto(request.params.page)
+    await Promise.all([
+        page.waitForNavigation({waitUntil: 'domcontentloaded'}),
+        page.waitForNavigation({waitUntil: 'networkidle0'})
+    ])
     if (frame === undefined || frame === null) {
         throw {
             message: "frame is undefined",
