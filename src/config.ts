@@ -3,5 +3,5 @@ import getenv from 'getenv'
 dotenv.config()
 
 export default {
-    HTTP_PORT: getenv.int("HTTP_PORT", 3000)
+    HTTP_PORT: getenv.int("PORT", 3000)
 }
