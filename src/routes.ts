@@ -23,7 +23,7 @@ router.get("/render/:page", async (request, response) => {
     let frame = await page.goto(request.params.page, {
         waitUntil: "networkidle2"
     })
-    response.status(frame?.status() as number).send(frame?.buffer)
+    response.status(frame?.status() as number).send(await frame?.buffer())
     await Promise.all([page.close(), browser.close()])
 })
 
