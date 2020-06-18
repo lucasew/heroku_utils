@@ -13,9 +13,11 @@ const [handler, eventSource] = newExpressEventSource(async (data) => data, taskP
 eventSource(console.log)
 
 router.get("/teste", handler)
+
 router.get("/render/:page", async (request, response) => {
     let browser = await puppeteer.launch({
-        headless: true
+        headless: true,
+        args: ['--no-sandbox']
     })
     let page = await browser.newPage()
     let frame = await page.goto(request.params.page, {
