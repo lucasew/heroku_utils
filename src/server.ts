@@ -1,4 +1,4 @@
-import express from 'express'
+import express, {ErrorRequestHandler} from 'express'
 import morgan from 'morgan'
 import {newRSSEventSource} from './components/eventSources/rss'
 import {newTimer} from './components/eventSources/timer'
@@ -23,4 +23,16 @@ const timer = newTimer(10000)
 
 timer(console.log)
 
+const errorHandler: ErrorRequestHandler = (err, request, response, next) => {
+    let {message, status, stack, joi} = err
+    if (joi) {
+        status = 400
+    }
+    response.status(status || 500).json({
+        error: message,
+        stackStace: stack
+    })
+}
+
+app.use(errorHandler)
 app.listen(config.HTTP_PORT)
