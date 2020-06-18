@@ -15,6 +15,7 @@ eventSource(console.log)
 router.get("/teste", handler)
 
 router.get("/render/:page", async (request, response) => {
+    console.log(`puppeteer: ${request.params.page}`)
     let browser = await puppeteer.launch({
         headless: true,
         args: ['--no-sandbox']
