@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "description": "Something to help you to better use heroku for personal automation",
   "scripts": {
-    "dev": "ts-node-dev --ignore-watch node_modules src/server.ts"
+    "dev": "ts-node-dev --ignore-watch node_modules src/server.ts",
+    "start": "ts-node src/server.ts"
   },
   "main": "src/index.ts",
   "license": "MIT",

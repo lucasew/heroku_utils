@@ -1,0 +1,16 @@
+{
+    "name": "Heroku task utils",
+    "description": "Utils server that runs in heroku",
+    "sucess_url": "/teste",
+    "scripts": {
+        "postdeploy": "yarn"
+    },
+    "buildpacks": [
+        {
+            "url": "https://github.com/jontewks/puppeteer-heroku-buildpack.git"
+        },
+        {
+            "url": "heroku/node"
+        }
+    ]
+}
