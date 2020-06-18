@@ -21,6 +21,7 @@ router.get("/render/:page", async (request, response) => {
         args: ['--no-sandbox']
     })
     setTimeout(() => {
+        page.close().then(browser.close)
         throw {
             message: "timeout",
             status: 500
@@ -42,7 +43,6 @@ router.get("/render/:page", async (request, response) => {
     }
     response
         .status(frame.status() as number).send(await frame.buffer())
-    await Promise.all([page.close(), browser.close()])
 })
 
 export default router
