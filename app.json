@@ -11,6 +11,9 @@
         },
         {
             "url": "heroku/node"
+        },
+        {
+            "url": "https://github.com/yarnpkg/yarn.git"
         }
     ]
 }
