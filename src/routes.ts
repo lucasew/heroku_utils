@@ -41,8 +41,9 @@ router.get("/render/:page", async (request, response) => {
     if (contentType !== undefined) {
         response.setHeader('Content-Type', contentType)
     }
+    const html = await page.$eval('html', (e) => e.innerHTML)
     response
-        .status(frame.status() as number).send(await frame.buffer())
+        .status(frame.status() as number).send(html)
 })
 
 export default router
