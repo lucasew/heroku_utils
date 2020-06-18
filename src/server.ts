@@ -34,5 +34,11 @@ const errorHandler: ErrorRequestHandler = (err, request, response, next) => {
     })
 }
 
+app.use((request, response) => {
+    throw {
+        status: 404,
+        message: 'route not found'
+    }
+})
 app.use(errorHandler)
 app.listen(config.HTTP_PORT)
