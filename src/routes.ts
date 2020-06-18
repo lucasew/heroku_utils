@@ -14,6 +14,13 @@ eventSource(console.log)
 
 router.get("/teste", handler)
 
+router.get("/error", async (request, response) => {
+    throw {
+        status: 404,
+        message: "no problem, this is a error"
+    }
+})
+
 router.get("/render/:page", async (request, response) => {
     console.log(`puppeteer: ${request.params.page}`)
     let browser = await puppeteer.launch({
