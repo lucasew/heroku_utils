@@ -16,13 +16,13 @@ const [handler, eventSource] = newExpressEventSource(async (data) => data, taskP
 eventSource(console.log)
 app.get("/teste", handler)
 
-try {
-    let [subs, tick] = newRSSEventSource("https://www.aquiagora.net/rss", taskPool)
-    timer(tick)
-    subs(console.log)
-} catch(e) {
-    console.error(e)
-}
+// try {
+//     let [subs, tick] = newRSSEventSource("https://www.aquiagora.net/rss", taskPool)
+//     timer(tick)
+//     subs(console.log)
+// } catch(e) {
+//     console.error(e)
+// }
 
 timer(console.log)
 
