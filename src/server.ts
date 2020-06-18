@@ -4,6 +4,7 @@ import {newExpressEventSource} from './components/eventSources/express'
 import {newRSSEventSource} from './components/eventSources/rss'
 import {newTaskPool} from './components/taskPool'
 import {newTimer} from './components/eventSources/timer'
+import config from './config'
 
 let app = express()
 app.use(morgan('tiny'))
@@ -27,4 +28,4 @@ app.get("/teste", handler)
 timer(console.log)
 
 
-app.listen(3000)
+app.listen(config.HTTP_PORT)
