@@ -51,7 +51,7 @@ router.get("/render/:page", async (request, response) => {
     if (contentType !== undefined) {
         response.setHeader('Content-Type', contentType)
     }
-    const html = await page.$eval('html', (e) => e.innerHTML)
+    const html = await page.content()
     response
         .status(frame.status() as number).send(html)
     clearTimeout(timeout)
