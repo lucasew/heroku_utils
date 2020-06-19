@@ -17,6 +17,8 @@ eventSource(console.log)
 
 router.get("/teste", handler)
 
-
+router.get('/favicon.ico', (request, response) => {
+    response.status(404)
+})
 
 export default router
