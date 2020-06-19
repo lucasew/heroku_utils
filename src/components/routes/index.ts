@@ -28,7 +28,7 @@ router.get("/error", async (request, response) => {
 router.get("/render/:url/:awaitSelector", async (request, response) => {
     const {url, awaitSelector} = request.params
     const iPhone = puppeteer.devices['iPhone 6'];
-    console.log(`puppeteer: ${request.params.page}`)
+    console.log(`puppeteer: ${url}`)
     const browser = await browserAgent
     await browser(async (page) => {
         try {
