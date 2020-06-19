@@ -9,7 +9,7 @@ export async function newTimeout<T>(fn: () => TorPromise<T>, time_ms: number): P
                 message: 'timeout',
                 status: 500
             })
-        })
+        }, time_ms)
         const result = Promise.resolve(fn())
         result.then((v) => {
             if (!expired) {
