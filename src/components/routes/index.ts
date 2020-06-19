@@ -31,16 +31,20 @@ router.get("/render/:url/:awaitSelector", async (request, response) => {
     console.log(`puppeteer: ${request.params.page}`)
     const browser = await browserAgent
     await browser(async (page) => {
-        await newTimeout(async () => {
-            await page.emulate(iPhone)
-            await page.goto(url, {
-                waitUntil: 'load'
-            })
-            await page.waitForSelector(awaitSelector)
-            const html = await page.content()
-            response
-                .send(html)
-        }, 30000)
+        try {
+            await newTimeout(async () => {
+                await page.emulate(iPhone)
+                await page.goto(url, {
+                    waitUntil: 'load'
+                })
+                await page.waitForSelector(awaitSelector)
+                const html = await page.content()
+                response
+                    .send(html)
+            }, 30000)
+        } catch (e) {
+            throw e
+        }
     })
 })
 

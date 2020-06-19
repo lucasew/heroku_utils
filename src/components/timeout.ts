@@ -11,11 +11,13 @@ export async function newTimeout<T>(fn: () => TorPromise<T>, time_ms: number): P
             })
         }, time_ms)
         const result = Promise.resolve(fn())
-        result.then((v) => {
-            if (!expired) {
-                clearTimeout(timeout)
-                return resolve(v)
-            }
-        })
+        result
+            .then((v) => {
+                if (!expired) {
+                    clearTimeout(timeout)
+                    return resolve(v)
+                }
+            })
+            .catch(reject)
     })
 }
