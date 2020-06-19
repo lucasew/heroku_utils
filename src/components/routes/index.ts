@@ -1,12 +1,11 @@
 import Router from 'express-promise-router'
 
 import {newExpressEventSource} from '../eventSources/express'
-import {newTaskPool} from '../taskPool'
+import {taskPool} from '../../config'
 
 const router = Router({
     caseSensitive: false
 })
-const taskPool = newTaskPool(2)
 
 router.use(require('./puppeteer').default)
 router.use(require('./articleParser').default)
