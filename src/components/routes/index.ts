@@ -24,7 +24,8 @@ router.get("/error", async (request, response) => {
     }
 })
 
-router.get("/render/:page", async (request, response) => {
+router.get("/render/:url/:awaitSelector", async (request, response) => {
+    const {url, awaitSelector} = request.params
     const iPhone = puppeteer.devices['iPhone 6'];
     console.log(`puppeteer: ${request.params.page}`)
     const browser = await browserAgent
@@ -36,23 +37,17 @@ router.get("/render/:page", async (request, response) => {
             }
         }, 30000)
         await page.emulate(iPhone)
-        let frame = await page.goto(request.params.page, {
+        await page.goto(url, {
             waitUntil: 'load'
         })
-        if (frame === undefined || frame === null) {
-            clearTimeout(timeout)
-            throw {
-                message: 'frame is undefined',
-                status: 500
-            }
-        }
+        await page.waitForSelector(awaitSelector)
         const contentType = response.getHeader('Content-Type')
         if (contentType !== undefined) {
             response.setHeader('Content-Type', contentType)
         }
         const html = await page.content()
         response
-            .status(frame.status() as number).send(html)
+            .send(html)
         clearTimeout(timeout)
     })
 })

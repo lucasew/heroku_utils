@@ -1,5 +1,4 @@
 import puppeteer from 'puppeteer'
-import {TaskRunner} from '../../model/taskRunner'
 import {newTaskPool} from '../taskPool'
 
 export async function newPuppeteerAgent(concurrentPages: number) {
