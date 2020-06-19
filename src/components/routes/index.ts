@@ -4,6 +4,7 @@ import puppeteer from 'puppeteer'
 import {newExpressEventSource} from '../eventSources/express'
 import {newTaskPool} from '../taskPool'
 import {newPuppeteerAgent} from '../agents/puppeteer'
+import {newTimeout} from '../timeout'
 
 const router = Router({
     caseSensitive: false
@@ -30,25 +31,16 @@ router.get("/render/:url/:awaitSelector", async (request, response) => {
     console.log(`puppeteer: ${request.params.page}`)
     const browser = await browserAgent
     await browser(async (page) => {
-        const timeout = setTimeout(() => {
-            throw {
-                message: 'timeout',
-                status: 500
-            }
+        await newTimeout(async () => {
+            await page.emulate(iPhone)
+            await page.goto(url, {
+                waitUntil: 'load'
+            })
+            await page.waitForSelector(awaitSelector)
+            const html = await page.content()
+            response
+                .send(html)
         }, 30000)
-        await page.emulate(iPhone)
-        await page.goto(url, {
-            waitUntil: 'load'
-        })
-        await page.waitForSelector(awaitSelector)
-        const contentType = response.getHeader('Content-Type')
-        if (contentType !== undefined) {
-            response.setHeader('Content-Type', contentType)
-        }
-        const html = await page.content()
-        response
-            .send(html)
-        clearTimeout(timeout)
     })
 })
 
