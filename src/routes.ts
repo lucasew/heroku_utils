@@ -38,7 +38,7 @@ router.get("/render/:page", async (request, response) => {
     }, 30000)
     let page = await browser.newPage()
     let frame = await page.goto(request.params.page, {
-        waitUntil: 'networkidle2'
+        waitUntil: 'networkidle0'
     })
     await page.waitFor(2000)
     if (frame === undefined || frame === null) {
