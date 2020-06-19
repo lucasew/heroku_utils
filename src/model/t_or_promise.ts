@@ -1,0 +1,1 @@
+export type TorPromise<T> = T | Promise<T>

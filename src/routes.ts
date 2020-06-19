@@ -3,13 +3,14 @@ import puppeteer from 'puppeteer'
 
 import {newExpressEventSource} from './components/eventSources/express'
 import {newTaskPool} from './components/taskPool'
+import {newPuppeteerAgent} from './components/agents/puppeteer'
 
 const router = Router({
     caseSensitive: false
 })
 const taskPool = newTaskPool(2)
 
-
+const browserAgent = newPuppeteerAgent(1)
 // setup express event source
 const [handler, eventSource] = newExpressEventSource(async (data) => data, taskPool)
 eventSource(console.log)
@@ -26,38 +27,35 @@ router.get("/error", async (request, response) => {
 router.get("/render/:page", async (request, response) => {
     const iPhone = puppeteer.devices['iPhone 6'];
     console.log(`puppeteer: ${request.params.page}`)
-    let browser = await puppeteer.launch({
-        headless: true,
-        args: ['--no-sandbox']
-    })
-    const timeout = setTimeout(() => {
-        page.close().then(browser.close)
-        throw {
-            message: "timeout",
-            status: 500
+    const browser = await browserAgent
+    await browser(async (page) => {
+        const timeout = setTimeout(() => {
+            throw {
+                message: 'timeout',
+                status: 500
+            }
+        }, 30000)
+        await page.emulate(iPhone)
+        let frame = await page.goto(request.params.page, {
+            waitUntil: 'load'
+        })
+        await page.waitFor(2000)
+        if (frame === undefined || frame === null) {
+            clearTimeout(timeout)
+            throw {
+                message: 'frame is undefined',
+                status: 500
+            }
         }
-    }, 30000)
-    let page = await browser.newPage()
-    await page.emulate(iPhone)
-    let frame = await page.goto(request.params.page, {
-        waitUntil: 'load'
-    })
-    await page.waitFor(2000)
-    if (frame === undefined || frame === null) {
+        const contentType = response.getHeader('Content-Type')
+        if (contentType !== undefined) {
+            response.setHeader('Content-Type', contentType)
+        }
+        const html = await page.content()
+        response
+            .status(frame.status() as number).send(html)
         clearTimeout(timeout)
-        throw {
-            message: "frame is undefined",
-            status: 500
-        }
-    }
-    const contentType = response.getHeader('Content-Type')
-    if (contentType !== undefined) {
-        response.setHeader('Content-Type', contentType)
-    }
-    const html = await page.content()
-    response
-        .status(frame.status() as number).send(html)
-    clearTimeout(timeout)
+    })
 })
 
 export default router

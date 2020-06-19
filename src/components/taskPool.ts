@@ -1,7 +1,8 @@
 import {TaskRunner} from '../model/taskRunner'
+import {TorPromise} from '../model/t_or_promise'
 
 export function newTaskPool(concurrentTasks: number): TaskRunner {
-    let queue: (() => void)[] = []
+    let queue: (() => TorPromise<void>)[] = []
     let currentRunningTasks = 0
     const incr = (n: number) => {
         currentRunningTasks+= n
@@ -27,13 +28,15 @@ export function newTaskPool(concurrentTasks: number): TaskRunner {
             decr()
             return
         }
-        await Promise.all(tasks.map((task) => {
-            new Promise((resolve) => {
-                resolve(task())
-            }).finally(decr)
-        }))
+        await Promise.all(tasks.map((task) =>
+            new Promise((resolve, reject) =>
+                Promise.resolve(task())
+                    .then(resolve)
+                    .catch(reject)
+            ).finally(decr)
+        ))
     }
-    return function(task: () => void) {
+    return function(task: () => TorPromise<void>) {
         queue.push(task)
         handler()
     }
