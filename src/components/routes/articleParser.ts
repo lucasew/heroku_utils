@@ -28,7 +28,7 @@ router.get('/mercury/json-txt/:url', async (request, response) => {
 router.get('/mercury/html/:url', async (request, response) => {
     const {url} = request.params
     const content = await Mercury.parse(url) 
-    response.json(content.content)
+    response.send(content.content)
 })
 
 router.get('/mercury/md/:url', async (request, response) => {
@@ -36,7 +36,7 @@ router.get('/mercury/md/:url', async (request, response) => {
     const content = await Mercury.parse(url, {
         contentType: "markdown"
     }) 
-    response.json(content.content)
+    response.send(content.content)
 })
 
 router.get('/mercury/txt/:url', async (request, response) => {
@@ -44,7 +44,7 @@ router.get('/mercury/txt/:url', async (request, response) => {
     const content = await Mercury.parse(url, {
         contentType: 'text'
     }) 
-    response.json(content.content)
+    response.send(content.content)
 })
 
 export default router
