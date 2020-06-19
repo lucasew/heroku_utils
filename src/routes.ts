@@ -38,7 +38,7 @@ router.get("/render/:page", async (request, response) => {
     }, 30000)
     let page = await browser.newPage()
     let frame = await page.goto(request.params.page, {
-        waitUntil: 'domcontentloaded'
+        waitUntil: 'load'
     })
     if (frame === undefined || frame === null) {
         clearTimeout(timeout)
