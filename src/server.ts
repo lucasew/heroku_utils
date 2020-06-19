@@ -4,7 +4,7 @@ import {newRSSEventSource} from './components/eventSources/rss'
 import {newTimer} from './components/eventSources/timer'
 import config from './config'
 
-import routes from './routes'
+import routes from './components/routes'
 
 let app = express()
 app.use(morgan('tiny'))

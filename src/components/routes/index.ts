@@ -1,9 +1,9 @@
 import Router from 'express-promise-router'
 import puppeteer from 'puppeteer'
 
-import {newExpressEventSource} from './components/eventSources/express'
-import {newTaskPool} from './components/taskPool'
-import {newPuppeteerAgent} from './components/agents/puppeteer'
+import {newExpressEventSource} from '../eventSources/express'
+import {newTaskPool} from '../taskPool'
+import {newPuppeteerAgent} from '../agents/puppeteer'
 
 const router = Router({
     caseSensitive: false
