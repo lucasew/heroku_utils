@@ -24,6 +24,7 @@ router.get("/error", async (request, response) => {
 })
 
 router.get("/render/:page", async (request, response) => {
+    const iPhone = puppeteer.devices['iPhone 6'];
     console.log(`puppeteer: ${request.params.page}`)
     let browser = await puppeteer.launch({
         headless: true,
@@ -37,6 +38,7 @@ router.get("/render/:page", async (request, response) => {
         }
     }, 30000)
     let page = await browser.newPage()
+    await page.emulate(iPhone)
     let frame = await page.goto(request.params.page, {
         waitUntil: 'load'
     })
