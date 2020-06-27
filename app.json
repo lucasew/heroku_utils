@@ -1,0 +1,12 @@
+{
+    "name": "heroku_utils",
+    "description": "utilitários hospedados via heroku",
+    "success_url": "/wake",
+    "env": {
+        "PORT": {
+            "description": "what port should the webserver listen",
+            "value": "80"
+        }
+    },
+    "stack": "container"
+}
