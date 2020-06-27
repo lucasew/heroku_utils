@@ -24,7 +24,7 @@ copy ./package.json ./
 copy ./yarn.lock ./
 COPY ./util.sh ./
 
-run bash ./util.sh npm_install
+run chmod +x ./util.sh && bash ./util.sh npm_install
 
 copy . ./
 cmd bash ./util.sh run
