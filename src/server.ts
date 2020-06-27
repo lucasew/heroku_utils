@@ -41,4 +41,6 @@ app.use((request, response) => {
     }
 })
 app.use(errorHandler)
-app.listen(config.HTTP_PORT)
+app.listen(config.HTTP_PORT, () => {
+    console.log("Listening at :" + config.HTTP_PORT)
+})
