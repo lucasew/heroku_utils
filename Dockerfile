@@ -13,9 +13,11 @@ RUN bash ./util.sh install
 ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH      $NVM_DIR/v$NODE_VERSION/bin:$PATH
 
-RUN useradd -b /app -u 1000 heroku
-USER heroku
+RUN useradd -d /app -u 1000 heroku
 
+RUN mkdir -p /app && chown -R heroku:heroku /app
+
+USER heroku
 workdir /app
 
 copy ./package.json ./
