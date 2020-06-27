@@ -1,7 +1,5 @@
 do_setup() {
     . $NVM_DIR/nvm.sh 
-    nvm alias default $NODE_VERSION 
-    nvm use default 
 }
 
 do_run() {
@@ -29,6 +27,8 @@ do_install() {
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
     . $NVM_DIR/nvm.sh 
     nvm install $NODE_VERSION 
+    nvm alias default $NODE_VERSION 
+    nvm use default 
     do_setup
     # yarn
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
