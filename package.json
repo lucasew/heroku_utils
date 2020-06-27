@@ -1,0 +1,31 @@
+{
+  "name": "heroku_serverless_utils",
+  "version": "0.0.1",
+  "description": "Something to help you to better use heroku for personal automation",
+  "scripts": {
+    "dev": "ts-node-dev --ignore-watch node_modules src/server.ts",
+    "start": "ts-node src/server.ts"
+  },
+  "main": "src/index.ts",
+  "license": "MIT",
+  "dependencies": {
+    "@postlight/mercury-parser": "^2.2.0",
+    "@types/express": "^4.17.6",
+    "@types/getenv": "^1.0.0",
+    "@types/morgan": "^1.9.1",
+    "@types/postlight__mercury-parser": "^2.2.2",
+    "@types/puppeteer": "^3.0.0",
+    "axios": "^0.19.2",
+    "comedy": "^2.1.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-promise-router": "^3.0.3",
+    "getenv": "^1.0.0",
+    "morgan": "^1.10.0",
+    "puppeteer": "^4.0.0",
+    "rss-parser": "^3.8.0",
+    "ts-node-dev": "^1.0.0-pre.48",
+    "typescript": "^3.9.5"
+  },
+  "devDependencies": {}
+}
