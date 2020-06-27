@@ -16,15 +16,16 @@ ENV PATH      $NVM_DIR/v$NODE_VERSION/bin:$PATH
 RUN useradd -d /app -u 1000 heroku
 
 RUN mkdir -p /app && chown -R heroku:heroku /app
+workdir /app
+COPY ./util.sh ./
+run chmod 777 util.sh
 
 USER heroku
-workdir /app
 
 copy ./package.json ./
 copy ./yarn.lock ./
-COPY ./util.sh ./
 
-run chmod +x ./util.sh && bash ./util.sh npm_install
+run bash ./util.sh npm_install
 
 copy . ./
 cmd bash ./util.sh run
