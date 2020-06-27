@@ -1,0 +1,1 @@
+web: bash ./util.sh run
