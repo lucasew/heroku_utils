@@ -13,7 +13,7 @@ RUN bash ./util.sh install
 ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH      $NVM_DIR/v$NODE_VERSION/bin:$PATH
 
-RUN adduser -D heroku
+RUN adduser --uid 1000 --home /app heroku
 USER heroku
 
 workdir /app
