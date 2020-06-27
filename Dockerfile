@@ -13,6 +13,9 @@ RUN bash ./util.sh install
 ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH      $NVM_DIR/v$NODE_VERSION/bin:$PATH
 
+RUN adduser -D heroku
+USER heroku
+
 workdir /app
 
 copy ./package.json ./
@@ -22,4 +25,4 @@ COPY ./util.sh ./
 run bash ./util.sh npm_install
 
 copy . ./
-entrypoint bash ./util.sh run
+cmd bash ./util.sh run
