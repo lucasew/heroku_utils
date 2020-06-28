@@ -20,12 +20,12 @@ workdir /app
 COPY ./util.sh ./
 run chmod 777 util.sh
 
-# USER heroku
+USER heroku
 
 copy ./package.json ./
 copy ./yarn.lock ./
 
-run bash ./util.sh npm_install
+run chown heroku:heroku -R . && bash ./util.sh npm_install
 
 copy . ./
 cmd bash ./util.sh run
