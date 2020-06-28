@@ -20,7 +20,7 @@ workdir /app
 COPY ./util.sh ./
 run chmod 777 util.sh
 
-USER heroku
+# USER heroku
 
 copy ./package.json ./
 copy ./yarn.lock ./
