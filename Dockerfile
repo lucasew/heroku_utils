@@ -14,11 +14,10 @@ run mkdir /app \
 WORKDIR /app
 USER node
 
-copy ./package.json ./
-copy ./yarn.lock ./
+copy --chown=node:node ./package.json ./
+copy --chown=node:node ./yarn.lock ./
 
-run ls -lha /app
 run yarn
 
-copy . ./
+copy --chown=node:node . ./
 cmd yarn start
