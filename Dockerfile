@@ -17,6 +17,7 @@ USER node
 copy ./package.json ./
 copy ./yarn.lock ./
 
+run ls -lha /app
 run yarn
 
 copy . ./
