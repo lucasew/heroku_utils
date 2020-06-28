@@ -1,31 +1,23 @@
-from ubuntu:focal
+from node:12-stretch
 
+run \
+    apt update \
+    && apt install -y gconf-service libasound2 libatk1.0-0 libatk-bridge2.0-0 libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget libcairo-gobject2 libxinerama1 libgtk2.0-0 libpangoft2-1.0-0 libthai0 libpixman-1-0 libxcb-render0 libharfbuzz0b libdatrie1 libgraphite2-3 libgbm1 \
+    && apt autoremove -y \
+    && apt clean -y \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+run mkdir /app \
+    && chmod -R 775 /app \
+    && chown -R node:node /app 
 
-env NVM_DIR /usr/lib/nvm
-ENV DEBIAN_FRONTEND noninteractive
-env NODE_VERSION v12.18.1
-
-COPY ./util.sh ./
-RUN bash ./util.sh install
-
-ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
-ENV PATH      $NVM_DIR/v$NODE_VERSION/bin:$PATH
-
-RUN useradd -d /app -u 1000 heroku
-
-RUN mkdir -p /app && chown -R heroku:heroku /app
-workdir /app
-COPY ./util.sh ./
-run chmod 777 util.sh
-
-USER heroku
+WORKDIR /app
+USER node
 
 copy ./package.json ./
 copy ./yarn.lock ./
 
-run chown heroku:heroku -R . && bash ./util.sh npm_install
+run yarn
 
 copy . ./
-cmd bash ./util.sh run
+cmd yarn start
