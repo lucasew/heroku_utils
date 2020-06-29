@@ -1,5 +1,6 @@
 import {TaskRunner} from '../model/taskRunner'
 import {TorPromise} from '../model/t_or_promise'
+import {logger} from '../config'
 
 export function newTaskPool(concurrentTasks: number): TaskRunner {
     let queue: (() => TorPromise<void>)[] = []
@@ -18,6 +19,7 @@ export function newTaskPool(concurrentTasks: number): TaskRunner {
         }
         const tasksToStart = concurrentTasks - currentRunningTasks
         if (tasksToStart == 0) {
+            logger(`Task pool with size ${concurrentTasks} reached maximum concurrent tasks`)
             return
         }
         incr(tasksToStart)

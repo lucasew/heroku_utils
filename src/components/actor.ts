@@ -1,4 +1,5 @@
 import {Actor, ActorFunction} from '../model/actor'
+import {logger} from '../config'
 
 interface ActorParameters {
     maxTries?: number,
@@ -21,9 +22,10 @@ export function actorize<Req, Res>(
                 Promise.resolve(res)
                     .then(resolve)
                     .catch((err) => {
-                        console.log(err)
+                        // console.log(err)
                         if (tentative > maxTries) {
-                            console.log(`task failed more than ${maxTries} times. giving up`)
+                            logger(`task failed more than ${maxTries} times. giving up
+                            ${err}`)
                         } else {
                             setTimeout(() => taskRunner(theTask), delayBetweenTries)
                         }

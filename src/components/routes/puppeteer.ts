@@ -3,6 +3,7 @@ import puppeteer from 'puppeteer'
 
 import {newPuppeteerAgent} from '../agents/puppeteer'
 import {newTimeout} from '../timeout'
+import {logger} from '../../config'
 
 const router = Router()
 const browserAgent = newPuppeteerAgent(1)
@@ -10,7 +11,7 @@ const browserAgent = newPuppeteerAgent(1)
 router.get("/render/:url/:awaitSelector", async (request, response) => {
     const {url, awaitSelector} = request.params
     const iPhone = puppeteer.devices['iPhone 6'];
-    console.log(`puppeteer: ${url}`)
+    logger(`puppeteer: ${url}`)
     const browser = await browserAgent
     await browser(async (page) => {
         try {
