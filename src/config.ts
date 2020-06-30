@@ -18,7 +18,8 @@ export const botAPI = new Telegram(telegram_token)
 
 bot.use(Telegraf.filter((ctx) => {
     const cond = ctx.from?.id === parseInt(telegram_adm)
-    logger(`@${ctx.from?.username}: ${ctx.updateType} ${ctx.message}`)
+    if (cond) return cond
+    logger(`@${ctx.from?.username}: ${ctx.updateType} ${JSON.stringify(ctx.message, null, 2)}`)
     return cond
 }))
 

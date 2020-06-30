@@ -4,6 +4,11 @@ import {logger, HTTP_PORT, bot} from './config'
 import importModules from './moduleImporter'
 import {join} from 'path'
 
+process.on('unhandledRejection', (err) => {
+    logger(`UNHANDLED PROMISE REJECTION
+    ${JSON.stringify(err, null, 2)}`)
+})
+
 let app = express()
 app.use(morgan('tiny'))
 

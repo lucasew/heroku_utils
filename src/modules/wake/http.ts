@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 export default async (router: Router) => {
-    router.use('/wake', (request, response) => {
+    router.use((request, response) => {
         return response.json({
             data: 'woken'
         })
