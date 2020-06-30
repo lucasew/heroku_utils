@@ -11,6 +11,7 @@ router.use(require('./puppeteer').default)
 router.use(require('./articleParser').default)
 router.use(require('./error').default)
 router.use(require('./wake').default)
+router.use(require('./uptime').default)
 
 // setup express event source
 const [handler, eventSource] = newExpressEventSource(async (data) => data, taskPool)
