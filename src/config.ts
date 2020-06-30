@@ -1,24 +1,32 @@
 import dotenv from 'dotenv'
 import getenv from 'getenv'
+import {Telegraf, Telegram} from 'telegraf'
+import Router from 'express-promise-router'
 
-import {newTaskPool} from './components/taskPool'
-import {newLogger} from './components/telegram_log'
-import { newUptime } from './components/uptime'
+import {newTaskPool} from './utils/newTaskPool'
+import { newUptime } from './utils/newUptime'
 dotenv.config()
 
 export const HTTP_PORT = getenv.int("PORT", 3000)
 export const taskPool = newTaskPool(10)
 
-export const logger = newLogger(taskPool, {
-    chat: getenv.string('TELEGRAM_LOG_CHAT', ''),
-    token: getenv.string('TELEGRAM_LOG_BOT', '')
-})
+export const telegram_adm = getenv.string('TELEGRAM_LOG_CHAT', '') 
+export const telegram_token = getenv.string('TELEGRAM_LOG_BOT', '')
+
+export const bot = new Telegraf(telegram_token)
+export const botAPI = new Telegram(telegram_token)
+
+bot.use(Telegraf.filter((ctx) => {
+    const cond = ctx.from?.id === parseInt(telegram_adm)
+    logger(`@${ctx.from?.username}: ${ctx.updateType} ${ctx.message}`)
+    return cond
+}))
+
+export const logger = async (msg: string) => {
+    await botAPI.sendMessage(telegram_adm, msg)
+    console.log(msg)
+}
 
 export const uptime = newUptime()
 
-export default {
-    HTTP_PORT,
-    taskPool,
-    logger,
-    uptime
-}
+export const router = Router()

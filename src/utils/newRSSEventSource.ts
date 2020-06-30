@@ -1,13 +1,10 @@
-import Parser from 'rss-parser'
-import axios from 'axios'
-
-import {assertHave} from '../../utils/assertHave'
-import {TaskRunner} from '../../model/taskRunner'
-import {EventHandler, Source} from '../../model/source'
-import {RSSEvent, RSSFeedMetadata, RSSItemMetadata} from '../../model/event/rss'
-import {actorize} from '../../components/actor'
+import {assertHave} from './assertHave'
+import {TaskRunner} from '../model/taskRunner'
+import {EventHandler, Source} from '../model/source'
+import {RSSEvent, RSSFeedMetadata, RSSItemMetadata} from '../model/event/rss'
+import {actorize} from './actorize'
 import RSSParser from 'rss-parser'
-import {newBroadcaster} from '../../utils/eventBroadcast'
+import {newBroadcaster} from './eventBroadcast'
 
 export function newRSSEventSource(
     feedUrl: string, 

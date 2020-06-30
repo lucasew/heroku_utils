@@ -1,5 +1,5 @@
-import {Source, EventHandler} from '../../model/source'
-import {newBroadcaster} from '../../utils/eventBroadcast'
+import {Source} from '../model/source'
+import {newBroadcaster} from './eventBroadcast'
 
 export function newTimer(interval_ms: number): Source<number> {
     let i = 0

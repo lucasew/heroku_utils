@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer'
-import {newTaskPool} from '../taskPool'
+import {newTaskPool} from '../../utils/newTaskPool'
 
 export async function newPuppeteerAgent(concurrentPages: number) {
     const puppeteerTaskPool = newTaskPool(concurrentPages)

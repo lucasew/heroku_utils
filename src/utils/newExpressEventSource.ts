@@ -1,10 +1,10 @@
 import express from 'express'
 
-import {HTTPBodyValidator, HTTPEvent, HTTPMethod} from '../../model/event/http'
-import {Source} from '../../model/source'
-import {TaskRunner} from '../../model/taskRunner'
-import {newBroadcaster} from '../../utils/eventBroadcast'
-import {express2httpevent} from '../../utils/express2httpevent'
+import {HTTPBodyValidator, HTTPEvent, HTTPMethod} from '../model/event/http'
+import {Source} from '../model/source'
+import {TaskRunner} from '../model/taskRunner'
+import {newBroadcaster} from './eventBroadcast'
+import {express2httpevent} from './express2httpevent'
 
 export function newExpressEventSource<B> (validator: HTTPBodyValidator<B>, runner: TaskRunner): 
     [express.Handler, Source<HTTPEvent<B>>] 

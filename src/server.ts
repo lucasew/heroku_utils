@@ -1,27 +1,38 @@
 import express, {ErrorRequestHandler} from 'express'
 import morgan from 'morgan'
-import {newRSSEventSource} from './components/eventSources/rss'
-import {newTimer} from './components/eventSources/timer'
-import {logger, HTTP_PORT} from './config'
-
-import routes from './components/routes'
+import {logger, HTTP_PORT, bot} from './config'
+import importModules from './moduleImporter'
+import {join} from 'path'
 
 let app = express()
 app.use(morgan('tiny'))
 
-app.use(routes)
+async function setupServer() {
+    app.get('/favicon.ico', (request, response) => {
+        response.status(404)
+    })
 
-const timer = newTimer(10000)
+    app.use(await importModules(join(__dirname, 'modules')))
 
-// try {
-//     let [subs, tick] = newRSSEventSource("https://www.aquiagora.net/rss", taskPool)
-//     timer(tick)
-//     subs(console.log)
-// } catch(e) {
-//     console.error(e)
-// }
+    app.use((request, response) => {
+        throw {
+            status: 404,
+            message: 'route not found'
+        }
+    })
+    app.use(errorHandler)
+}
 
-timer(console.log)
+setupServer().then(() => {
+    bot.launch({
+        polling: {
+            limit: 10
+        }
+    })
+    app.listen(HTTP_PORT, () => {
+        logger("Listening at: " + HTTP_PORT)
+    })
+})
 
 const errorHandler: ErrorRequestHandler = (err, request, response, next) => {
     let {message, status, stack, joi} = err
@@ -38,14 +49,3 @@ const errorHandler: ErrorRequestHandler = (err, request, response, next) => {
         stackStace: stack
     })
 }
-
-app.use((request, response) => {
-    throw {
-        status: 404,
-        message: 'route not found'
-    }
-})
-app.use(errorHandler)
-app.listen(HTTP_PORT, () => {
-    logger("Listening at: " + HTTP_PORT)
-})

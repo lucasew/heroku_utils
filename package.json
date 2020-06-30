@@ -24,6 +24,7 @@
     "morgan": "^1.10.0",
     "puppeteer": "^4.0.0",
     "rss-parser": "^3.8.0",
+    "telegraf": "^3.38.0",
     "ts-node-dev": "^1.0.0-pre.48",
     "typescript": "^3.9.5"
   },
