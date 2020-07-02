@@ -20,6 +20,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-promise-router": "^3.0.3",
+    "feed": "^4.2.0",
     "getenv": "^1.0.0",
     "morgan": "^1.10.0",
     "puppeteer": "^4.0.0",
