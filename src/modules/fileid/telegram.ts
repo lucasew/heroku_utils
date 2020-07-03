@@ -15,23 +15,15 @@ export default async () => {
         }
     }
     bot.command('doc_fileid', createMiddlewareFromFileIDHandler((ctx, fileid) => {
-        return ctx.replyWithDocument({
-            source: fileid
-        })
+        return ctx.replyWithDocument(fileid)
     }))
     bot.command('audio_fileid', createMiddlewareFromFileIDHandler((ctx, fileid) => {
-        return ctx.replyWithAudio({
-            source: fileid
-        })
+        return ctx.replyWithAudio(fileid)
     }))
     bot.command('video_fileid', createMiddlewareFromFileIDHandler((ctx, fileid) => {
-        return ctx.replyWithVideo({
-            source: fileid
-        })
+        return ctx.replyWithVideo(fileid)
     }))
     bot.command('image_fileid', createMiddlewareFromFileIDHandler((ctx, fileid) => {
-        return ctx.replyWithPhoto({
-            source: fileid
-        })
+        return ctx.replyWithPhoto(fileid)
     }))
 }
