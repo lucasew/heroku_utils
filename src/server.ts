@@ -3,6 +3,8 @@ import morgan from 'morgan'
 import {logger, HTTP_PORT, bot} from './config'
 import importModules from './moduleImporter'
 import {join} from 'path'
+import {addEndHandler} from './config'
+import {promisify} from 'util'
 
 process.on('unhandledRejection', (err) => {
     logger(`UNHANDLED PROMISE REJECTION
@@ -26,6 +28,7 @@ async function setupServer() {
         }
     })
     app.use(errorHandler)
+    addEndHandler(() => logger('stopping...'))
 }
 
 setupServer().then(() => {
@@ -34,9 +37,11 @@ setupServer().then(() => {
             limit: 10
         }
     })
-    app.listen(HTTP_PORT, () => {
+    addEndHandler(bot.stop)
+    const server = app.listen(HTTP_PORT, () => {
         logger("Listening at: " + HTTP_PORT)
     })
+    addEndHandler(promisify(server.close))
 })
 
 const errorHandler: ErrorRequestHandler = (err, request, response, next) => {

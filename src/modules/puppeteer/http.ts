@@ -1,12 +1,11 @@
 import puppeteer from 'puppeteer'
 
-import {newPuppeteerAgent} from './agent'
 import {newTimeout} from '../../utils/timeout'
 import {logger} from '../../config'
 import {Router} from 'express'
+import {browser as browserAgent} from '../../config'
 
 export default async (router: Router) => {
-    const browserAgent = newPuppeteerAgent(1)
     router.get("/:url/:awaitSelector", async (request, response) => {
         const {url, awaitSelector} = request.params
         const iPhone = puppeteer.devices['iPhone 6'];
