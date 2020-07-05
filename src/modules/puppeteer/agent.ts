@@ -1,5 +1,6 @@
 import puppeteer from 'puppeteer'
 import {newTaskPool} from '../../utils/newTaskPool'
+import {addEndHandler} from '../../config'
 
 export async function newPuppeteerAgent(concurrentPages: number) {
     const puppeteerTaskPool = newTaskPool(concurrentPages)
@@ -7,6 +8,7 @@ export async function newPuppeteerAgent(concurrentPages: number) {
         headless: true,
         args: ['--no-sandbox']
     })
+    addEndHandler(() => browser.close())
     return (handler: (page: puppeteer.Page) => Promise<void>) => {
         return new Promise((resolve, reject) => {
             puppeteerTaskPool(() => {

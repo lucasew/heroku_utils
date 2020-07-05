@@ -4,7 +4,6 @@ import {logger, HTTP_PORT, bot} from './config'
 import importModules from './moduleImporter'
 import {join} from 'path'
 import {addEndHandler} from './config'
-import {promisify} from 'util'
 
 process.on('unhandledRejection', (err) => {
     logger(`UNHANDLED PROMISE REJECTION
@@ -15,6 +14,8 @@ let app = express()
 app.use(morgan('tiny'))
 
 async function setupServer() {
+    addEndHandler(() => logger('stopping...'))
+
     app.get('/favicon.ico', (request, response) => {
         response.status(404)
     })
@@ -28,7 +29,6 @@ async function setupServer() {
         }
     })
     app.use(errorHandler)
-    addEndHandler(() => logger('stopping...'))
 }
 
 setupServer().then(() => {
@@ -37,11 +37,14 @@ setupServer().then(() => {
             limit: 10
         }
     })
-    addEndHandler(bot.stop)
+    addEndHandler(() => bot.stop())
+    
     const server = app.listen(HTTP_PORT, () => {
         logger("Listening at: " + HTTP_PORT)
     })
-    addEndHandler(promisify(server.close))
+    addEndHandler(() => new Promise((resolve, reject) => {
+        server.close((err) => err ? reject(err) : resolve())
+    }))
 })
 
 const errorHandler: ErrorRequestHandler = (err, request, response, next) => {

@@ -1,16 +1,21 @@
 import {TaskRunner} from '../model/taskRunner'
 import {TorPromise} from '../model/t_or_promise'
 import {logger} from '../config'
+import {addEndHandler} from '../config'
 
 export function newTaskPool(concurrentTasks: number): TaskRunner {
     let queue: (() => TorPromise<void>)[] = []
     let currentRunningTasks = 0
+    let isEnd = false
+    addEndHandler(() => isEnd = true)
     const incr = (n: number) => {
         currentRunningTasks+= n
     }
     const decr = () => {
         currentRunningTasks--
-        handler()
+        if (!isEnd) {
+            handler()
+        }
     }
     async function handler() {
         // console.log(`queue size: ${queue.length}`)
