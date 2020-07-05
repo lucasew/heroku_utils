@@ -1,8 +1,9 @@
-import {bot} from '../../config'
 import {html2pdf, url2pdf} from './agent'
 import {parseTelegramCommand} from '../../utils/parseTelegramCommand'
+import Telegraf from 'telegraf'
+import { TelegrafContext } from 'telegraf/typings/context'
 
-export default async () => {
+export default async (bot: Telegraf<TelegrafContext>) => {
     bot.command('html2pdf', (ctx) => {
         const cmd = parseTelegramCommand(ctx)
         if (cmd === undefined) {

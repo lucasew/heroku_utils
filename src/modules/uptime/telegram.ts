@@ -1,7 +1,8 @@
-import {bot} from '../../config'
 import uptime from './agent'
+import { TelegrafContext } from 'telegraf/typings/context'
+import Telegraf from 'telegraf'
 
-export default async () => {
+export default (bot: Telegraf<TelegrafContext>)=> {
     bot.command('uptime', (ctx) => {
         ctx.reply(String(uptime()))
     })

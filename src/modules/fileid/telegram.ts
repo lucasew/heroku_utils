@@ -1,8 +1,8 @@
-import {bot} from '../../config'
 import {parseTelegramCommand} from '../../utils/parseTelegramCommand'
 import { TelegrafContext } from 'telegraf/typings/context'
+import Telegraf from 'telegraf'
 
-export default async () => {
+export default async (bot: Telegraf<TelegrafContext>) => {
     function createMiddlewareFromFileIDHandler(fn: (ctx: TelegrafContext, file_id: string) => Promise<any>) {
         return async function (ctx: TelegrafContext) {
             const cmd  = parseTelegramCommand(ctx)
