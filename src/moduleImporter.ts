@@ -4,7 +4,7 @@ import {promisify} from 'util'
 import Router from 'express-promise-router'
 
 import {logger} from './common'
-import {app as http} from './components/http'
+import {externalUse} from './components/http'
 import {bot} from './components/telegram'
 
 const readdir = promisify(_readdir)
@@ -34,5 +34,5 @@ export default async function importModules(dir: string) {
             }
         })
     await Promise.all([...imports, ...tasks])
-    http.use(router)
+    externalUse(router)
 }

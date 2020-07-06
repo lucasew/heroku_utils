@@ -1,4 +1,4 @@
-import express, {ErrorRequestHandler} from 'express'
+import express, {ErrorRequestHandler, Router} from 'express'
 import morgan from 'morgan'
 import config from '../config'
 import {logger} from '../common'
@@ -13,6 +13,9 @@ export default {
     destroy
 }
 
+export function externalUse(router: Router) {
+    app.use(router)
+}
 async function setup() {
     app.use(morgan('tiny'))
 
@@ -20,7 +23,6 @@ async function setup() {
         response.status(404)
     })
 
-    app.use(errorHandler)
 }
 
 async function launch() {
@@ -30,6 +32,8 @@ async function launch() {
             message: 'route not found'
         }
     })
+    
+    app.use(errorHandler)
 
     const server = app.listen(config.HTTP_PORT, () => {
         logger("Listening at: " + config.HTTP_PORT)
