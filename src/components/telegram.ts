@@ -1,5 +1,6 @@
-import Telegraf from 'telegraf'
+import Telegraf, { Telegram } from 'telegraf'
 import config from '../config'
+import { TelegrafContext } from 'telegraf/typings/context'
 
 export default {
     setup,
@@ -7,8 +8,14 @@ export default {
     destroy
 }
 
-export const bot = new Telegraf(config.telegram.token)
+export type PluginType = (bot: Telegraf<TelegrafContext>) => Promise<void>
 
+export const bot = new Telegraf(config.telegram.token)
+let plugins: PluginType[] = []
+
+export const externalUse = (fn: (bot: Telegraf<TelegrafContext>) => any) => {
+    plugins.push(fn)
+}
 
 export const sendMeATelegram = (msg: string) =>
     bot.telegram.sendMessage(config.telegram.adm, msg)
@@ -25,6 +32,7 @@ async function setup() {
 }
 
 async function launch() {
+    await Promise.all(plugins.map((plugin) => plugin(bot))) 
     await bot.launch({
         polling: {
             limit: 10

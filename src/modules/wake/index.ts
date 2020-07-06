@@ -1,5 +1,5 @@
 import http from './http'
 
-export default () => {
-    return {http}
+export default {
+    http
 }

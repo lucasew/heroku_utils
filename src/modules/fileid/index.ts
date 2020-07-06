@@ -1,5 +1,5 @@
 import telegram from './telegram'
 
-export default () => {
-    return {telegram}
+export default {
+    telegram
 }

@@ -2,10 +2,13 @@ import express, {ErrorRequestHandler, Router} from 'express'
 import morgan from 'morgan'
 import config from '../config'
 import {logger} from '../common'
+import PromiseRouter from 'express-promise-router'
 
 export let app = express()
 
 let destroy = async () => {}
+
+export type PluginType = (router: Router) => Promise<void>
 
 export default {
     setup, 
@@ -13,19 +16,28 @@ export default {
     destroy
 }
 
-export function externalUse(router: Router) {
-    app.use(router)
+let plugins: [string, (rt: Router) => any][] = []
+
+export function externalUse(path: string, fn: (rt: Router) => any) {
+    plugins.push([path, fn])
 }
+
 async function setup() {
     app.use(morgan('tiny'))
 
     app.get('/favicon.ico', (request, response) => {
         response.status(404)
     })
-
 }
 
 async function launch() {
+    let router = PromiseRouter()
+    await Promise.all(plugins.map(async ([key, fn]) => {
+        let rt = PromiseRouter()
+        await Promise.resolve(fn(rt))
+        router.use(key, rt)
+    }))
+    app.use(router)
     app.use((request, response) => {
         throw {
             status: 404,
