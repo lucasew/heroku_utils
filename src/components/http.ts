@@ -1,10 +1,12 @@
 import express, {ErrorRequestHandler, Router} from 'express'
 import morgan from 'morgan'
-import config from '../config'
 import {logger} from '../common'
 import PromiseRouter from 'express-promise-router'
+import getenv from 'getenv'
 
 export let app = express()
+
+const HTTP_PORT = getenv.int("PORT", 3000)
 
 let destroy = async () => {}
 
@@ -47,8 +49,8 @@ async function launch() {
     
     app.use(errorHandler)
 
-    const server = app.listen(config.HTTP_PORT, () => {
-        logger("Listening at: " + config.HTTP_PORT)
+    const server = app.listen(HTTP_PORT, () => {
+        logger("Listening at: " + HTTP_PORT)
     })
     destroy = () => new Promise((resolve, reject) => {
         server.close((err) => err ? reject(err) : resolve())

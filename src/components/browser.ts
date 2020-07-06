@@ -1,10 +1,12 @@
 import puppeteer from 'puppeteer'
-import config from '../config'
 import { newTaskPool } from '../utils/newTaskPool'
+import getenv from 'getenv'
 
 export default {setup, launch, destroy}
 
-const puppeteerTaskPool = newTaskPool(config.concurrentPuppeteerJobs)
+const concurrentPuppeteerJobs = getenv.int('CONCURRENT_PUPPETEER_JOBS', 2)
+const puppeteerTaskPool = newTaskPool(concurrentPuppeteerJobs)
+
 const browser = puppeteer.launch({
     headless: true,
     args: ['--no-sandbox']

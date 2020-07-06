@@ -1,6 +1,6 @@
 import Telegraf, { Telegram } from 'telegraf'
-import config from '../config'
 import { TelegrafContext } from 'telegraf/typings/context'
+import getenv from 'getenv'
 
 export default {
     setup,
@@ -8,9 +8,14 @@ export default {
     destroy
 }
 
+const auth = {
+    adm: getenv.string('TELEGRAM_LOG_CHAT'),
+    token: getenv.string('TELEGRAM_LOG_BOT')
+}
+
 export type PluginType = (bot: Telegraf<TelegrafContext>) => Promise<void>
 
-export const bot = new Telegraf(config.telegram.token)
+export const bot = new Telegraf(auth.token)
 let plugins: PluginType[] = []
 
 export const externalUse = (fn: (bot: Telegraf<TelegrafContext>) => any) => {
@@ -18,11 +23,11 @@ export const externalUse = (fn: (bot: Telegraf<TelegrafContext>) => any) => {
 }
 
 export const sendMeATelegram = (msg: string) =>
-    bot.telegram.sendMessage(config.telegram.adm, msg)
+    bot.telegram.sendMessage(auth.adm, msg)
 
 async function setup() {
     bot.use(async (ctx, next) => {
-        const cond = ctx.from?.id === parseInt(config.telegram.adm)
+        const cond = ctx.from?.id === parseInt(auth.adm)
         if (cond) {
             return await next()
         }
