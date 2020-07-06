@@ -1,40 +1,38 @@
-import {statSync, readdir} from 'fs'
+import {statSync as stat, readdir as _readdir} from 'fs'
 import {join} from 'path'
 import {promisify} from 'util'
 import Router from 'express-promise-router'
 
-import {logger, bot} from './config'
-import ModuleContext from './modules/moduleContext'
+import {logger} from './common'
+import {app as http} from './components/http'
+import {bot} from './components/telegram'
 
-const preaddir = promisify(readdir)
+const readdir = promisify(_readdir)
 
 export default async function importModules(dir: string) {
     let router = Router()
-    let promises: Promise<any>[] = []
     const diritem = (item: string) => join(dir, item)
-    let items = (await preaddir(dir))
-        .filter((item: string) => statSync(diritem(item)).isDirectory())
+    let items = (await readdir(dir))
+        .filter((item: string) => stat(diritem(item)).isDirectory())
     logger(`Found modules: ${items.join(', ')}`)
+
+    let tasks: Promise<any>[] = []
     let imports = items
         .map(async (item: string) => {
             console.log('Importing module ' + item)
-            const context: ModuleContext = {
-                registerRoutes: (fn) => {
-                    let rt = Router()
-                    promises.push(
-                        Promise.resolve(fn(rt))
-                        .then(() => {
-                            router.use('/' + item, rt)
-                        })
-                    )
-                },
-                registerBotHandlers: (fn) => {
-                    promises.push(Promise.resolve(fn(bot)))
-                }
+            const {telegram, http} = require(diritem(item)).default()
+            if (telegram) {
+                tasks.push(Promise.resolve(telegram(bot)))
             }
-            return require(diritem(item)).default(context)
+            if (http) {
+                tasks.push(new Promise(async (resolve, reject) => {
+                    let rt = Router()
+                    await Promise.resolve(http(rt)).catch(reject)
+                    router.use(`/${item}`, rt)
+                    resolve()
+                }))
+            }
         })
-    await Promise.all(imports)
-    await Promise.all(promises)
-    return router
+    await Promise.all([...imports, ...tasks])
+    http.use(router)
 }

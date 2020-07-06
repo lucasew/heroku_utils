@@ -1,4 +1,3 @@
-import {Telegraf} from 'telegraf/typings/telegraf'
 import {TelegrafContext} from 'telegraf/typings/context'
 
 const regex = /^\/([^@\s]+)@?(?:(\S+)|)\s?([\s\S]+)?$/i;

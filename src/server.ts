@@ -1,64 +1,51 @@
-import express, {ErrorRequestHandler} from 'express'
-import morgan from 'morgan'
-import {logger, HTTP_PORT, bot} from './config'
+import dotenv from 'dotenv'
 import importModules from './moduleImporter'
 import {join} from 'path'
-import {addEndHandler} from './config'
+import { logger, addEndHandler } from './common'
 
-process.on('unhandledRejection', (err) => {
-    logger(`UNHANDLED PROMISE REJECTION
-    ${JSON.stringify(err, null, 2)}`)
-})
-
-let app = express()
-app.use(morgan('tiny'))
-
-async function setupServer() {
-    addEndHandler(() => logger('stopping...'))
-
-    app.get('/favicon.ico', (request, response) => {
-        response.status(404)
-    })
-
-    app.use(await importModules(join(__dirname, 'modules')))
-
-    app.use((request, response) => {
-        throw {
-            status: 404,
-            message: 'route not found'
-        }
-    })
-    app.use(errorHandler)
+type ImportedFn = () => any | undefined
+function runFuncs(fns: ImportedFn[]) {
+    return Promise.all(
+        fns
+            .filter((f) => f !== undefined)
+            .map((f) => Promise.resolve(f()))
+    )
 }
 
-setupServer().then(() => {
-    bot.launch({
-        polling: {
-            limit: 10
+async function main() {
+    console.log('inicializando...')
+    dotenv.config()
+    const components = [
+        'browser',
+        'http',
+        'telegram',
+        'unhandledPromiseHandler',
+        'uptime'
+    ].map((component) => {
+        const imported = require(join(__dirname, 'components', component)).default
+        if (imported === undefined) {
+            console.log(`component ${component} is not defined`)
+            return {}
         }
+        return imported
     })
-    addEndHandler(() => bot.stop())
-    
-    const server = app.listen(HTTP_PORT, () => {
-        logger("Listening at: " + HTTP_PORT)
+    const setups = components.map((c) => {
+        const {setup} = c
+        return setup
     })
-    addEndHandler(() => new Promise((resolve, reject) => {
-        server.close((err) => err ? reject(err) : resolve())
-    }))
-})
-
-const errorHandler: ErrorRequestHandler = (err, request, response, next) => {
-    let {message, status, stack, joi} = err
-    if (joi) {
-        status = 400
-    }
-    if (status === 500) {
-        logger(`ERRO 500 detectado
-        ${message}
-        ${stack}`)
-    }
-    response.status(status || 500).json({
-        error: message,
-        stackStace: stack
+    const launchs = components.map((c) => {
+        const {launch} = c
+        return launch
     })
+    const destroys = components.map((c) => {
+        const {destroy} = c
+        return destroy
+    })
+    await runFuncs(setups)
+    await importModules(join(__dirname, 'modules'))
+    await runFuncs(launchs)
+    logger(`startup done in ${process.uptime()}s`)
+    addEndHandler(() => runFuncs(destroys))
 }
+
+main()

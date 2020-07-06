@@ -1,16 +1,15 @@
 import puppeteer from 'puppeteer'
 
 import {newTimeout} from '../../utils/timeout'
-import {logger} from '../../config'
+import {logger} from '../../common'
 import {Router} from 'express'
-import {browser as browserAgent} from '../../config'
+import {handle as browser} from '../../components/browser'
 
 export default async (router: Router) => {
     router.get("/:url/:awaitSelector", async (request, response) => {
         const {url, awaitSelector} = request.params
         const iPhone = puppeteer.devices['iPhone 6'];
         logger(`puppeteer: ${url}`)
-        const browser = await browserAgent
         await browser(async (page) => {
             try {
                 await newTimeout(async () => {

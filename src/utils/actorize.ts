@@ -1,5 +1,5 @@
 import {Actor, ActorFunction} from '../model/actor'
-import {logger} from '../config'
+import {logger} from '../common'
 
 interface ActorParameters {
     maxTries?: number,

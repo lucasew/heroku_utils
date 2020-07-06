@@ -1,4 +1,4 @@
-import { addEndHandler, logger } from "../config"
+import { logger } from "../common"
 
 type Fn = () => (Promise<any>| any)
 

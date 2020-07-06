@@ -1,6 +1,6 @@
 import Mercury from '@postlight/mercury-parser' 
 import {actorize} from '../../utils/actorize'
-import {taskPool} from '../../config'
+import {taskPool} from '../../common'
 
 type MercuryParserArticle = 'html' | 'markdown' | 'text' | undefined
 const articleFuncGen = (format: MercuryParserArticle) => 

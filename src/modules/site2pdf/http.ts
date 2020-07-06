@@ -1,4 +1,4 @@
-import {Router, response} from 'express'
+import {Router} from 'express'
 import {html2pdf, url2pdf} from './agent'
 
 export default async (router: Router) => {
