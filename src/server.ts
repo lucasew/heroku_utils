@@ -3,8 +3,8 @@ import {join} from 'path'
 import { logger, addEndHandler } from './common'
 import importer from './utils/importer'
 import member from './utils/member'
-import { externalUse as externalTelegramUse } from './components/telegram'
-import { externalUse as externalHTTPUse } from './components/http'
+import { registerPlugin as registerTelegramPlugin } from './components/telegram'
+import { registerPlugin as registerHTTPPlugin } from './components/http'
 import {PluginType as TelegramPluginType} from './components/telegram'
 import {PluginType as HTTPPluginType} from './components/http'
 
@@ -42,11 +42,11 @@ async function main() {
             console.log(`loading module ${name}`)
             let telegram: TelegramPluginType | undefined = module.telegram
             if (telegram !== undefined) {
-                externalTelegramUse(telegram)
+                registerTelegramPlugin(telegram)
             }
             let http: HTTPPluginType | undefined = module.http
             if (http !== undefined) {
-                externalHTTPUse(`/${name}`, http)
+                registerHTTPPlugin(`/${name}`, http)
             }
         }))
     await launch.then(runFuncs)

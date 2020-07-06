@@ -2,31 +2,37 @@ import Telegraf, { Telegram } from 'telegraf'
 import { TelegrafContext } from 'telegraf/typings/context'
 import getenv from 'getenv'
 
-export default {
-    setup,
-    launch,
-    destroy
-}
+export type PluginType = (bot: Telegraf<TelegrafContext>) => Promise<void>
 
 const auth = {
     adm: getenv.string('TELEGRAM_LOG_CHAT'),
     token: getenv.string('TELEGRAM_LOG_BOT')
 }
 
-export type PluginType = (bot: Telegraf<TelegrafContext>) => Promise<void>
+const app = new Telegraf(auth.token)
 
-export const bot = new Telegraf(auth.token)
 let plugins: PluginType[] = []
 
-export const externalUse = (fn: (bot: Telegraf<TelegrafContext>) => any) => {
+export default {
+    setup,
+    launch,
+    destroy
+}
+
+
+export function handle<T>(handler: (ctx: Telegraf<TelegrafContext>) => T) {
+    return Promise.resolve(handler(app))
+}
+
+export const registerPlugin = (fn: (bot: Telegraf<TelegrafContext>) => any) => {
     plugins.push(fn)
 }
 
 export const sendMeATelegram = (msg: string) =>
-    bot.telegram.sendMessage(auth.adm, msg)
+    app.telegram.sendMessage(auth.adm, msg)
 
 async function setup() {
-    bot.use(async (ctx, next) => {
+    app.use(async (ctx, next) => {
         const cond = ctx.from?.id === parseInt(auth.adm)
         if (cond) {
             return await next()
@@ -37,8 +43,8 @@ async function setup() {
 }
 
 async function launch() {
-    await Promise.all(plugins.map((plugin) => plugin(bot))) 
-    await bot.launch({
+    await Promise.all(plugins.map(handle))
+    await app.launch({
         polling: {
             limit: 10
         }
@@ -46,5 +52,5 @@ async function launch() {
 }
 
 async function destroy() {
-    bot.stop()
+    app.stop()
 }

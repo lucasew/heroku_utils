@@ -4,9 +4,9 @@ import {logger} from '../common'
 import PromiseRouter from 'express-promise-router'
 import getenv from 'getenv'
 
-export let app = express()
-
 const HTTP_PORT = getenv.int("PORT", 3000)
+
+const app = express()
 
 let destroy = async () => {}
 
@@ -20,7 +20,7 @@ export default {
 
 let plugins: [string, (rt: Router) => any][] = []
 
-export function externalUse(path: string, fn: (rt: Router) => any) {
+export function registerPlugin(path: string, fn: (rt: Router) => any) {
     plugins.push([path, fn])
 }
 
