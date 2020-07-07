@@ -1,5 +1,11 @@
-import http from './http'
+import { Router } from "express";
 
 export default {
-    http
+    http(router: Router) {
+        router.use((request, response) => {
+            return response.json({
+                data: 'woken'
+            })
+        })
+    }
 }

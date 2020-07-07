@@ -1,13 +1,23 @@
 import {addEndHandler, logger} from '../common'
+import { getFirestore } from './firebase'
 
 export default {
-    setup
-}
+    async setup() {
+        process.on('unhandledRejection', (err) => {
+            logger(`UNHANDLED PROMISE REJECTION
+            ${err}`)
 
-async function setup() {
-    process.on('unhandledRejection', (err) => {
-        logger(`UNHANDLED PROMISE REJECTION
-        ${JSON.stringify(err, null, 2)}`)
-    })
-    addEndHandler(() => logger('stopping...'))
+        })
+    },
+    async launch() {
+        const datastore = await getFirestore('unhandledPromise')
+        process.on('unhandledRejection', (err) => {
+            const data = {
+                time: Date.now(),
+                err
+            }
+            datastore.push(data)
+        })
+        addEndHandler(() => logger('stopping...'))
+    }
 }
