@@ -21,6 +21,7 @@
     "express": "^4.17.1",
     "express-promise-router": "^3.0.3",
     "feed": "^4.2.0",
+    "firebase": "^7.15.5",
     "getenv": "^1.0.0",
     "morgan": "^1.10.0",
     "puppeteer": "^4.0.0",
