@@ -15,7 +15,7 @@
     "@types/morgan": "^1.9.1",
     "@types/postlight__mercury-parser": "^2.2.2",
     "@types/puppeteer": "^3.0.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "comedy": "^2.1.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
